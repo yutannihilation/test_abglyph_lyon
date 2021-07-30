@@ -21,6 +21,7 @@ impl FillVertexConstructor<Vertex> for VertexCtor {
 }
 
 impl LyonPathBuilder {
+    // returns `(x, y, glyphId, pathId, triangleId)`
     pub fn into_fill(self) -> (Vec<f32>, Vec<f32>, Vec<u32>, Vec<u32>, Vec<u32>) {
         let path = self.builder.build();
 

@@ -1,6 +1,7 @@
 use crate::builder::LyonPathBuilder;
 
 impl LyonPathBuilder {
+    // returns `(x, y, glyphId, pathId)`
     pub fn into_path(self) -> (Vec<f32>, Vec<f32>, Vec<u32>, Vec<u32>) {
         let path = self.builder.build();
 
@@ -8,30 +9,33 @@ impl LyonPathBuilder {
         let mut y: Vec<f32> = Vec::new();
         let mut glyph_ids: Vec<u32> = Vec::new();
         let mut path_ids: Vec<u32> = Vec::new();
-        let mut cur_path_id: u32 = 0;
 
-        for (p, gid) in path.iter().zip(self.glyph_ids) {
+        for p in path.iter_with_attributes() {
             match p {
                 lyon::path::Event::Begin { at } => {
-                    x.push(at.x);
-                    y.push(at.y);
-                    glyph_ids.push(gid);
-                    path_ids.push(cur_path_id);
+                    glyph_ids.push(at.1[0] as _);
+                    path_ids.push(at.1[1] as _);
+                    x.push(at.0.x);
+                    y.push(at.0.y);
                 }
-                lyon::path::Event::Line { to, .. } => {
-                    x.push(to.x);
-                    y.push(to.y);
-                    glyph_ids.push(gid);
-                    path_ids.push(cur_path_id);
+                lyon::path::Event::Line { from, to } => {
+                    glyph_ids.push(from.1[0] as _);
+                    path_ids.push(from.1[1] as _);
+                    x.push(to.0.x);
+                    y.push(to.0.y);
                 }
                 lyon::path::Event::Quadratic { from, ctrl, to } => {
-                    let seg = lyon::geom::QuadraticBezierSegment { from, ctrl, to };
+                    let seg = lyon::geom::QuadraticBezierSegment {
+                        from: from.0,
+                        ctrl,
+                        to: to.0,
+                    };
                     // skip the first point as it's already added
                     for p in seg.flattened(self.tolerance).skip(1) {
+                        glyph_ids.push(from.1[0] as _);
+                        path_ids.push(from.1[1] as _);
                         x.push(p.x);
                         y.push(p.y);
-                        glyph_ids.push(gid);
-                        path_ids.push(cur_path_id);
                     }
                 }
                 lyon::path::Event::Cubic {
@@ -41,22 +45,20 @@ impl LyonPathBuilder {
                     to,
                 } => {
                     let seg = lyon::geom::CubicBezierSegment {
-                        from,
+                        from: from.0,
                         ctrl1,
                         ctrl2,
-                        to,
+                        to: to.0,
                     };
                     // skip the first point as it's already added
                     for p in seg.flattened(self.tolerance).skip(1) {
+                        glyph_ids.push(from.1[0] as _);
+                        path_ids.push(from.1[1] as _);
                         x.push(p.x);
                         y.push(p.y);
-                        glyph_ids.push(gid);
-                        path_ids.push(cur_path_id);
                     }
                 }
-                lyon::path::Event::End { .. } => {
-                    cur_path_id += 1;
-                }
+                lyon::path::Event::End { .. } => {}
             }
         }
 
