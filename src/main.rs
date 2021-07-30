@@ -11,12 +11,13 @@ fn main() {
 
     let bbox = font.outline_glyph(g, &mut builder);
 
-    let result = builder.into_path();
+    // let result = builder.into_path();
+    let result = builder.into_fill();
 
     for i in 0..result.0.len() {
         println!(
-            "{},{},{},{}",
-            result.0[i], result.1[i], result.2[i], result.3[i]
+            "{},{},{},{},{}",
+            result.0[i], result.1[i], result.2[i], result.3[i], result.4[i]
         );
     }
 }

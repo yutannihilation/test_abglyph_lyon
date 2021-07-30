@@ -3,7 +3,9 @@ use lyon::math::point;
 pub struct LyonPathBuilder {
     pub builder: lyon::path::path::Builder,
     pub glyph_ids: Vec<u32>,
+    pub path_ids: Vec<u32>,
     pub cur_glyph_id: u32,
+    pub cur_path_id: u32,
     offset_x: f32,
     offset_y: f32,
 
@@ -15,7 +17,9 @@ impl LyonPathBuilder {
         Self {
             builder: lyon::path::Path::builder(),
             glyph_ids: Vec::new(),
+            path_ids: Vec::new(),
             cur_glyph_id: 0,
+            cur_path_id: 0,
             offset_x: 0.,
             offset_y: 0.,
             tolerance,
