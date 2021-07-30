@@ -22,7 +22,7 @@ fn main() {
     let mut builder = LyonPathBuilder::new(0.01, 10.0);
 
     let font = ttf_parser::Face::from_slice(
-        include_bytes!("/usr/share/fonts/opentype/urw-base35/P052-Italic.otf"),
+        include_bytes!("/home/yutani/Downloads/SourceCodePro-Black.otf"),
         0,
     )
     .expect("expected font");
