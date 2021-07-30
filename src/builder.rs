@@ -4,8 +4,8 @@ pub struct LyonPathBuilder {
     pub builder: lyon::path::path::BuilderWithAttributes,
     pub cur_glyph_id: u32,
     pub cur_path_id: u32,
-    offset_x: f32,
-    offset_y: f32,
+    pub offset_x: f32,
+    pub offset_y: f32,
 
     pub tolerance: f32,
 
