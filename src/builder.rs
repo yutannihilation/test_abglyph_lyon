@@ -8,10 +8,13 @@ pub struct LyonPathBuilder {
     offset_y: f32,
 
     pub tolerance: f32,
+
+    // line width of the stroke
+    pub line_width: f32,
 }
 
 impl LyonPathBuilder {
-    pub fn new(tolerance: f32) -> Self {
+    pub fn new(tolerance: f32, line_width: f32) -> Self {
         Self {
             builder: lyon::path::Path::builder_with_attributes(2),
             cur_glyph_id: 0,
@@ -19,6 +22,7 @@ impl LyonPathBuilder {
             offset_x: 0.,
             offset_y: 0.,
             tolerance,
+            line_width,
         }
     }
 

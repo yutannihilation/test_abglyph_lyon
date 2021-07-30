@@ -1,7 +1,7 @@
 use test_abglyph_lyon::builder::LyonPathBuilder;
 
 fn main() {
-    let mut builder = LyonPathBuilder::new(0.01);
+    let mut builder = LyonPathBuilder::new(0.01, 10.0);
 
     let font =
         ttf_parser::Face::from_slice(include_bytes!("../fonts/IPAexfont00401/ipaexg.ttf"), 0)
@@ -12,7 +12,8 @@ fn main() {
     let bbox = font.outline_glyph(g, &mut builder);
 
     // let result = builder.into_path();
-    let result = builder.into_fill();
+    // let result = builder.into_fill();
+    let result = builder.into_stroke();
 
     for i in 0..result.0.len() {
         println!(
