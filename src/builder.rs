@@ -1,9 +1,14 @@
 use lyon::math::point;
 
 pub struct LyonPathBuilder {
+    // It's not very elegant to store the glyph ID (not the `glyphId` ttf-parser
+    // uses, but the glyph count) and path ID in attributes, but it seems the
+    // attribute is the only thing we can pass to tessellators.
     pub builder: lyon::path::path::BuilderWithAttributes,
+
     pub cur_glyph_id: u32,
     pub cur_path_id: u32,
+
     pub offset_x: f32,
     pub offset_y: f32,
 

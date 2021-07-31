@@ -2,7 +2,6 @@ use crate::builder::LyonPathBuilder;
 
 use lyon::tessellation::*;
 
-// Let's use our own custom vertex type instead of the default one.
 #[derive(Copy, Clone, Debug)]
 struct Vertex {
     position: lyon::math::Point,
@@ -10,6 +9,8 @@ struct Vertex {
     path_id: u32,
 }
 
+// This can have some members so that it can be used in new_vertex(), but I
+// don't find any useful usage yet.
 struct VertexCtor {}
 
 impl FillVertexConstructor<Vertex> for VertexCtor {
@@ -97,8 +98,8 @@ fn extract_vertex_buffer(
         if let Some(v) = geometry.vertices.get(i) {
             x.push(v.position.x);
             y.push(v.position.y);
-            glyph_ids.push(0);
-            path_ids.push(0);
+            glyph_ids.push(v.glyph_id);
+            path_ids.push(v.path_id);
             triangle_id.push(n as u32 / 3);
         }
     }
