@@ -39,9 +39,22 @@ impl LyonPathBuilder {
 
         let subtables = font.kerning_subtables();
 
+        let line_height = font.height() + font.line_gap();
+
         let mut prev_glyph: Option<GlyphId> = None;
         for c in text.chars() {
-            let cur_glyph = font.glyph_index(c).expect("expected valid glyph");
+            // Skip control characters
+            if c.is_control() {
+                // If the character is a line break, move to the next line
+                if c == '\n' {
+                    self.offset_y -= line_height as f32;
+                    self.offset_x = 0.;
+                }
+                prev_glyph = None;
+                continue;
+            }
+            // Even when we cannot find glyph_id, fill it with 0.
+            let cur_glyph = font.glyph_index(c).unwrap_or(GlyphId(0));
 
             if let Some(prev_glyph) = prev_glyph {
                 self.offset_x += find_kerning(subtables, prev_glyph, cur_glyph) as f32;
@@ -61,6 +74,8 @@ impl LyonPathBuilder {
     }
 }
 
+// Return kerning between two glyphs. When no kerning information is available,
+// return 0.
 fn find_kerning(subtables: Subtables, left: GlyphId, right: GlyphId) -> i16 {
     for st in subtables {
         // Do I need to also skip if the font is variable?

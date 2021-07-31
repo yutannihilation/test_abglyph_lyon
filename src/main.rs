@@ -1,10 +1,10 @@
 use test_abglyph_lyon::builder::LyonPathBuilder;
 
-const TEXT: &str = "VALUE";
-const FONT_FILE: &str = "/home/yutani/Downloads/SourceCodePro-Black.otf";
+const TEXT: &str = "日本語で\nおkやで。";
+const FONT_FILE: &str = "fonts/RampartOne-Regular.ttf";
 
 fn main() {
-    let mut builder = LyonPathBuilder::new(0.01, 10.0);
+    let mut builder = LyonPathBuilder::new(0.1, 10.0);
 
     builder.outline(TEXT, FONT_FILE).unwrap();
 
